@@ -62,11 +62,21 @@ Use `backend/railway.env.example` as the template. On **finances** → **Variabl
 
 ### Deploy flow
 
-On each deploy, Railway runs:
+On each deploy, Railway (Nixpacks) runs:
 
-1. `pip install -r requirements.txt` (build)
+1. `pip install -r requirements.txt` (install phase — do **not** add a duplicate build command)
 2. `alembic upgrade head` (pre-deploy migrations)
 3. `uvicorn app.main:app --host 0.0.0.0 --port $PORT` (start)
+
+**Railway dashboard settings:**
+
+| Setting | Value |
+|---------|-------|
+| Builder | Nixpacks |
+| Build command | *(leave empty)* |
+| Nixpacks config | `backend/nixpacks.toml` |
+| Start command | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| Healthcheck | `/health` |
 
 ---
 
@@ -133,7 +143,8 @@ npm run dev
 |---------|-------|-----|
 | Deploy fails at `alembic` | Wrong/missing `DATABASE_URL` | Link PostgreSQL; use `${{Postgres.DATABASE_URL}}` |
 | `connection refused` to localhost | Used local `.env` values on Railway | Remove localhost URL; use Postgres reference |
-| Build fails on WeasyPrint | Heavy native deps | Removed from `requirements.txt`; uses xhtml2pdf |
+| Build fails on `pip install` | Bad pinned deps or duplicate build command | Use slim `requirements.txt`; leave **Build command** empty in Railway |
+| Build fails on pycairo/cairo | Missing Linux headers | `nixpacks.toml` installs `libcairo2-dev` etc. |
 | CORS error in browser | Wrong `CORS_ORIGINS` | Set exact Vercel URL or `CORS_ALLOW_VERCEL_PREVIEWS=true` |
 | `/health` fails | App crashed on start | Check deploy logs after fixing `DATABASE_URL` |
 
