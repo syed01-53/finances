@@ -15,64 +15,68 @@
     </p>
   </div>
 
-  <p class="pdf-muted" style="margin: 0 0 14px;">
-    Monthly cash flow summary based on client salary, expense budget, and insurance deductibles.
-  </p>
+  <div class="pdf-section-title">Monthly Cash Flow Diagram</div>
 
-  <table class="pdf-card-row">
+  <table class="flow-table">
     <tr>
-      <td>
-        <div class="metric-card inflow">
-          <span class="metric-label">Monthly Inflow</span>
-          <span class="metric-value">{{ sacs.inflow | currency_compact }}</span>
-          <span class="metric-note">Salary / income</span>
+      <td width="30%">
+        <div class="bubble bubble-green">
+          <div class="bubble-title">Inflow</div>
+          <div class="bubble-amount">{{ sacs.inflow | currency_compact }}</div>
+          <div class="bubble-sub">per month</div>
         </div>
       </td>
-      <td>
-        <div class="metric-card outflow">
-          <span class="metric-label">Monthly Outflow</span>
-          <span class="metric-value">{{ sacs.outflow | currency_compact }}</span>
-          <span class="metric-note">Expense budget</span>
+      <td width="8%" class="flow-arrow">&rarr;</td>
+      <td width="30%">
+        <div class="bubble bubble-red">
+          <div class="bubble-title">Outflow</div>
+          <div class="bubble-amount">{{ sacs.outflow | currency_compact }}</div>
+          <div class="bubble-sub">expense budget</div>
         </div>
       </td>
-      <td>
-        <div class="metric-card reserve">
-          <span class="metric-label">Monthly Excess</span>
-          <span class="metric-value">{{ sacs.excess | currency_compact }}</span>
-          <span class="metric-note">Available to save</span>
+      <td width="8%" class="flow-arrow flow-arrow-red">&rarr;</td>
+      <td width="30%">
+        <div class="bubble bubble-blue">
+          <div class="bubble-title">Excess</div>
+          <div class="bubble-amount">{{ sacs.excess | currency_compact }}</div>
+          <div class="bubble-sub">to Private Reserve</div>
         </div>
       </td>
     </tr>
   </table>
 
-  <div class="pdf-section-title">Cash Flow Details</div>
   <table class="data-table">
     <tbody>
       <tr>
-        <th>Monthly Inflow (Salary)</th>
+        <th>Monthly Inflow (Salary, after tax)</th>
         <td class="amount-right">{{ sacs.inflow | currency }}</td>
       </tr>
       <tr>
-        <th>Monthly Outflow (Expense Budget)</th>
+        <th>Monthly Outflow (Agreed expense budget)</th>
         <td class="amount-right">{{ sacs.outflow | currency }}</td>
       </tr>
       <tr class="total">
-        <th>Monthly Excess</th>
+        <th>Monthly Excess (Inflow &minus; Outflow)</th>
         <td class="amount-right">{{ sacs.excess | currency }}</td>
       </tr>
       <tr class="highlight">
-        <th>Private Reserve Target</th>
+        <th>Private Reserve Target (6&times; expenses + deductibles)</th>
         <td class="amount-right">{{ sacs.private_reserve_target | currency }}</td>
+      </tr>
+      <tr>
+        <th>Account Floor (buffer per bank account)</th>
+        <td class="amount-right">{{ sacs.floor_amount | currency }}</td>
       </tr>
     </tbody>
   </table>
 
   <div class="callout">
-    <p class="callout-title">Private Reserve Target</p>
+    <p class="callout-title">Cash Flow Summary</p>
     <p class="callout-text">
-      Calculated as 6&times; monthly expenses plus insurance deductibles
-      ({{ client.insurance_deductibles | currency }}).
-      This is the recommended emergency reserve goal for {{ client.name }}.
+      {{ sacs.inflow | currency_compact }} inflow &rarr; {{ sacs.outflow | currency_compact }} outflow
+      &rarr; {{ sacs.excess | currency_compact }} excess savings each month.
+      Target reserve: {{ sacs.private_reserve_target | currency }}
+      (includes {{ client.insurance_deductibles | currency }} insurance deductibles).
     </p>
   </div>
 
@@ -80,14 +84,22 @@
 
   <div class="pdf-banner">
     <p class="pdf-banner-brand">AW Client Report Portal</p>
-    <h1>Private Reserve Summary</h1>
+    <h1>Private Reserve &amp; Investment Balances</h1>
     <p class="pdf-banner-meta">{{ client.name }} &mdash; {{ report.title }}</p>
   </div>
 
-  <div class="pdf-section-title">Reserve Planning</div>
+  <div class="pdf-section-title">Quarterly Account Balances</div>
   <table class="data-table">
     <tbody>
       <tr>
+        <th>Private Reserve Balance (current)</th>
+        <td class="amount-right">{{ sacs.private_reserve_balance | currency }}</td>
+      </tr>
+      <tr>
+        <th>Investment Account Balance (Schwab / brokerage)</th>
+        <td class="amount-right">{{ sacs.investment_balance | currency }}</td>
+      </tr>
+      <tr class="highlight">
         <th>Target Savings (6&times; expenses + deductibles)</th>
         <td class="amount-right">{{ sacs.private_reserve_target | currency }}</td>
       </tr>
@@ -95,12 +107,24 @@
         <th>Monthly Excess Available to Reserve</th>
         <td class="amount-right">{{ sacs.excess | currency }}</td>
       </tr>
-      <tr class="total">
-        <th>Insurance Deductibles Included</th>
+      <tr>
+        <th>Insurance Deductibles Included in Target</th>
         <td class="amount-right">{{ client.insurance_deductibles | currency }}</td>
+      </tr>
+      <tr>
+        <th>Account Floor (per bank account)</th>
+        <td class="amount-right">{{ sacs.floor_amount | currency }}</td>
       </tr>
     </tbody>
   </table>
+
+  <div class="callout">
+    <p class="callout-title">Reserve Planning</p>
+    <p class="callout-text">
+      Mark accounts as &ldquo;Private Reserve&rdquo; or &ldquo;Investment&rdquo; in the client profile
+      to populate page 2 balances. Brokerage accounts are used as investment balance when none are marked.
+    </p>
+  </div>
 
   <div class="pdf-footer">
     Confidential client report generated by AW Client Report Portal.

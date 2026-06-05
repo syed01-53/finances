@@ -18,167 +18,173 @@
     </p>
   </div>
 
-  <table class="info-grid">
+  <table class="tcc-grid">
     <tr>
-      <td>
-        <div class="info-card">
+      <td width="50%">
+        <div class="info-bubble">
           <h3>{{ client.name }}</h3>
-          {% if client.date_of_birth %}<p>DOB: {{ client.date_of_birth }}</p>{% endif %}
-          {% if client.ssn %}<p>SSN: {{ client.ssn | mask_ssn }}</p>{% endif %}
-          {% if client.phone %}<p>Phone: {{ client.phone }}</p>{% endif %}
+          {% if client.date_of_birth %}<p>DOB: {{ client.date_of_birth }} &middot; Age {{ client.date_of_birth | client_age }}</p>{% endif %}
+          {% if client.ssn %}<p>SSN: ***-**-{{ client.ssn | ssn_last_four }}</p>{% endif %}
         </div>
       </td>
-      <td>
-        <div class="info-card">
+      <td width="50%">
+        <div class="info-bubble">
           {% if client.is_married %}
           <h3>{{ client.spouse_name or 'Spouse' }}</h3>
-          {% if client.spouse_date_of_birth %}<p>DOB: {{ client.spouse_date_of_birth }}</p>{% endif %}
-          {% if client.spouse_ssn %}<p>SSN: {{ client.spouse_ssn | mask_ssn }}</p>{% endif %}
+          {% if client.spouse_date_of_birth %}<p>DOB: {{ client.spouse_date_of_birth }} &middot; Age {{ client.spouse_date_of_birth | client_age }}</p>{% endif %}
+          {% if client.spouse_ssn %}<p>SSN: ***-**-{{ client.spouse_ssn | ssn_last_four }}</p>{% endif %}
           {% else %}
           <h3>Marital Status</h3>
-          <p>Single</p>
+          <p>Single client</p>
           {% endif %}
         </div>
       </td>
     </tr>
   </table>
 
+  {% set c1_retirement = balances | rejectattr('account.owner.value', 'equalto', 'client_2') | selectattr('account.account_type.value', 'in', retirement_types) | list %}
+  {% set c2_retirement = balances | selectattr('account.account_type.value', 'in', retirement_types) | selectattr('account.owner.value', 'equalto', 'client_2') | list %}
+  {% set brokerage_rows = balances | selectattr('account.account_type.value', 'equalto', 'brokerage') | list %}
+  {% set trust_rows = balances | selectattr('account.account_type.value', 'equalto', 'trust') | list %}
+  {% set liability_rows = balances | selectattr('account.account_type.value', 'in', liability_types) | list %}
+
   <div class="pdf-section-title">Retirement Accounts</div>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Account</th>
-        <th>Institution</th>
-        <th>Owner</th>
-        <th class="amount-right">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% set retirement_rows = balances | selectattr('account.account_type.value', 'in', retirement_types) | list %}
-      {% if retirement_rows %}
-        {% for balance in retirement_rows %}
-        <tr>
-          <td>{{ balance.account.name }}</td>
-          <td>{{ balance.account.institution or '—' }}</td>
-          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
-          <td class="amount-right">{{ balance.amount | currency }}</td>
-        </tr>
-        {% endfor %}
-      {% else %}
-        <tr class="empty-row"><td colspan="4">No retirement accounts recorded.</td></tr>
-      {% endif %}
-    </tbody>
+  <table class="tcc-grid">
+    <tr>
+      <td width="50%">
+        <div class="tcc-zone-label">Client 1 Retirement</div>
+        {% if c1_retirement %}
+          {% for balance in c1_retirement %}
+          <div class="bubble-account">
+            <div class="acct-name">{{ balance.account.name }}</div>
+            <div class="acct-balance">{{ balance.amount | currency }}</div>
+            <div class="acct-meta">
+              {% if balance.account.account_last_four %}Acct ...{{ balance.account.account_last_four }}{% endif %}
+              {% if balance.cash_amount %} &middot; Cash {{ balance.cash_amount | currency }}{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="pdf-muted">No accounts</p>
+        {% endif %}
+      </td>
+      <td width="50%">
+        <div class="tcc-zone-label">Client 2 Retirement</div>
+        {% if c2_retirement %}
+          {% for balance in c2_retirement %}
+          <div class="bubble-account">
+            <div class="acct-name">{{ balance.account.name }}</div>
+            <div class="acct-balance">{{ balance.amount | currency }}</div>
+            <div class="acct-meta">
+              {% if balance.account.account_last_four %}Acct ...{{ balance.account.account_last_four }}{% endif %}
+              {% if balance.cash_amount %} &middot; Cash {{ balance.cash_amount | currency }}{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="pdf-muted">No accounts</p>
+        {% endif %}
+      </td>
+    </tr>
   </table>
 
-  <div class="pdf-section-title">Trust / Property</div>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Account</th>
-        <th>Property Address</th>
-        <th>Owner</th>
-        <th class="amount-right">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% set trust_rows = balances | selectattr('account.account_type.value', 'equalto', 'trust') | list %}
-      {% if trust_rows %}
-        {% for balance in trust_rows %}
-        <tr>
-          <td>{{ balance.account.name }}</td>
-          <td>{{ balance.account.property_address or '—' }}</td>
-          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
-          <td class="amount-right">{{ balance.amount | currency }}</td>
-        </tr>
-        {% endfor %}
-      {% else %}
-        <tr class="empty-row"><td colspan="4">No trust or property accounts recorded.</td></tr>
-      {% endif %}
-    </tbody>
+  <table class="tcc-grid">
+    <tr>
+      <td width="35%">
+        <div class="tcc-zone-label">Non-Retirement</div>
+        {% if brokerage_rows %}
+          {% for balance in brokerage_rows %}
+          <div class="bubble-account">
+            <div class="acct-name">{{ balance.account.name }}</div>
+            <div class="acct-balance">{{ balance.amount | currency }}</div>
+            <div class="acct-meta">
+              {% if balance.account.account_last_four %}Acct ...{{ balance.account.account_last_four }}{% endif %}
+              {% if balance.cash_amount %} &middot; Cash {{ balance.cash_amount | currency }}{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="pdf-muted">No accounts</p>
+        {% endif %}
+      </td>
+      <td width="30%">
+        <div class="tcc-zone-label">Trust / Property</div>
+        {% if trust_rows %}
+          {% for balance in trust_rows %}
+          <div class="bubble-account bubble-trust">
+            <div class="acct-name">{{ balance.account.name }}</div>
+            <div class="acct-balance">{{ balance.amount | currency }}</div>
+            <div class="acct-meta">
+              {% if balance.account.property_address %}{{ balance.account.property_address }}{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="pdf-muted">No trust</p>
+        {% endif %}
+      </td>
+      <td width="35%">
+        <div class="tcc-zone-label">Liabilities (separate)</div>
+        {% if liability_rows %}
+          {% for balance in liability_rows %}
+          <div class="bubble-account bubble-liability">
+            <div class="acct-name">{{ balance.account.name }}</div>
+            <div class="acct-balance">{{ balance.amount | currency }}</div>
+            <div class="acct-meta">
+              {% if balance.account.interest_rate %}{{ balance.account.interest_rate }}%{% endif %}
+              {% if balance.account.account_last_four %} &middot; ...{{ balance.account.account_last_four }}{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="pdf-muted">No liabilities</p>
+        {% endif %}
+      </td>
+    </tr>
   </table>
 
-  <div class="pdf-section-title">Non-Retirement Accounts</div>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Account</th>
-        <th>Institution</th>
-        <th>Owner</th>
-        <th class="amount-right">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% set brokerage_rows = balances | selectattr('account.account_type.value', 'equalto', 'brokerage') | list %}
-      {% if brokerage_rows %}
-        {% for balance in brokerage_rows %}
-        <tr>
-          <td>{{ balance.account.name }}</td>
-          <td>{{ balance.account.institution or '—' }}</td>
-          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
-          <td class="amount-right">{{ balance.amount | currency }}</td>
-        </tr>
-        {% endfor %}
-      {% else %}
-        <tr class="empty-row"><td colspan="4">No brokerage accounts recorded.</td></tr>
-      {% endif %}
-    </tbody>
-  </table>
-
-  <div class="pdf-section-title">Liabilities (Separate)</div>
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Account</th>
-        <th>Rate</th>
-        <th>Owner</th>
-        <th class="amount-right">Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% set liability_rows = balances | selectattr('account.account_type.value', 'in', liability_types) | list %}
-      {% if liability_rows %}
-        {% for balance in liability_rows %}
-        <tr class="liability">
-          <td>{{ balance.account.name }}</td>
-          <td>{% if balance.account.interest_rate %}{{ balance.account.interest_rate }}%{% else %}—{% endif %}</td>
-          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
-          <td class="amount-right">{{ balance.amount | currency }}</td>
-        </tr>
-        {% endfor %}
-      {% else %}
-        <tr class="empty-row"><td colspan="4">No liabilities recorded.</td></tr>
-      {% endif %}
-    </tbody>
-  </table>
-
-  <div class="pdf-section-title">Net Worth Summary</div>
-  <table class="data-table">
-    <tbody>
-      <tr>
-        <th>Client 1 Retirement</th>
-        <td class="amount-right">{{ tcc.client_1_retirement | currency }}</td>
-      </tr>
-      <tr>
-        <th>Client 2 Retirement</th>
-        <td class="amount-right">{{ tcc.client_2_retirement | currency }}</td>
-      </tr>
-      <tr>
-        <th>Non-Retirement Total</th>
-        <td class="amount-right">{{ tcc.non_retirement | currency }}</td>
-      </tr>
-      <tr>
-        <th>Trust</th>
-        <td class="amount-right">{{ tcc.trust | currency }}</td>
-      </tr>
-      <tr class="highlight">
-        <th>Grand Total Net Worth</th>
-        <td class="amount-right">{{ tcc.grand_total | currency }}</td>
-      </tr>
-      <tr class="liability">
-        <th>Liabilities (not subtracted)</th>
-        <td class="amount-right">{{ tcc.liabilities | currency }}</td>
-      </tr>
-    </tbody>
+  <div class="pdf-section-title">Summary Totals</div>
+  <table class="tcc-grid">
+    <tr>
+      <td width="25%">
+        <div class="summary-box">
+          <div class="summary-label">Client 1 Retirement</div>
+          <div class="summary-value">{{ tcc.client_1_retirement | currency }}</div>
+        </div>
+      </td>
+      <td width="25%">
+        <div class="summary-box">
+          <div class="summary-label">Client 2 Retirement</div>
+          <div class="summary-value">{{ tcc.client_2_retirement | currency }}</div>
+        </div>
+      </td>
+      <td width="25%">
+        <div class="summary-box">
+          <div class="summary-label">Non-Retirement</div>
+          <div class="summary-value">{{ tcc.non_retirement | currency }}</div>
+        </div>
+      </td>
+      <td width="25%">
+        <div class="summary-box">
+          <div class="summary-label">Trust</div>
+          <div class="summary-value">{{ tcc.trust | currency }}</div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="summary-box" style="background-color: #dbeafe; border-color: #3b82f6;">
+          <div class="summary-label">Grand Total Net Worth</div>
+          <div class="summary-value">{{ tcc.grand_total | currency }}</div>
+        </div>
+      </td>
+      <td colspan="2">
+        <div class="summary-box" style="background-color: #fff1f2; border-color: #f43f5e;">
+          <div class="summary-label">Liabilities (not subtracted)</div>
+          <div class="summary-value">{{ tcc.liabilities | currency }}</div>
+        </div>
+      </td>
+    </tr>
   </table>
 
   <div class="pdf-footer">

@@ -41,11 +41,13 @@ class BalanceService:
             balance = existing_balances.get(entry.account_id)
             if balance:
                 balance.amount = entry.amount
+                balance.cash_amount = entry.cash_amount
             else:
                 balance = Balance(
                     report_id=report_id,
                     account_id=entry.account_id,
                     amount=entry.amount,
+                    cash_amount=entry.cash_amount,
                 )
                 self.db.add(balance)
             results.append(balance)

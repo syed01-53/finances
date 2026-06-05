@@ -5,6 +5,7 @@ import { updateAccount } from './accountApi'
 import AccountForm from './AccountForm'
 import { useAccounts } from '../../hooks/useAccounts'
 import { ACCOUNT_TYPES, getOwnerLabel } from '../../types'
+import { SACS_ROLES } from '../../utils/calculations'
 
 function accountLabel(type) {
   return ACCOUNT_TYPES.find((item) => item.value === type)?.label || type
@@ -76,6 +77,9 @@ export default function AccountList({ clientId, client = null, onUpdated }) {
                     {account.institution ? ` · ${account.institution}` : ''}
                     {account.account_last_four ? ` · ****${account.account_last_four}` : ''}
                     {account.interest_rate ? ` · ${account.interest_rate}%` : ''}
+                    {account.sacs_role && account.sacs_role !== 'none'
+                      ? ` · ${SACS_ROLES.find((r) => r.value === account.sacs_role)?.label || account.sacs_role}`
+                      : ''}
                   </p>
                   {account.property_address && (
                     <p className="text-xs text-slate-400">{account.property_address}</p>

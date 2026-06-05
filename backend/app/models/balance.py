@@ -25,6 +25,7 @@ class Balance(Base):
         UUID(as_uuid=True), ForeignKey("accounts.id", ondelete="CASCADE"), nullable=False
     )
     amount: Mapped[Decimal] = mapped_column(Numeric(14, 2), nullable=False, default=0)
+    cash_amount: Mapped[Decimal | None] = mapped_column(Numeric(14, 2), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

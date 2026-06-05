@@ -89,7 +89,7 @@ class ReportService:
 
     def get_report_detail(self, report_id: UUID) -> ReportDetailResponse:
         report = self.get_report(report_id)
-        sacs = self.calculation_service.calculate_sacs(report.client)
+        sacs = self.calculation_service.calculate_sacs(report.client, report.balances)
         tcc = self.calculation_service.calculate_tcc(report.balances)
         accounts = self.account_service.get_accounts_by_client(report.client_id)
         balance_account_ids = {balance.account_id for balance in report.balances}
@@ -116,7 +116,7 @@ class ReportService:
 
     def get_calculations(self, report_id: UUID) -> tuple[SACSCalculation, TCCCalculation]:
         report = self.get_report(report_id)
-        sacs = self.calculation_service.calculate_sacs(report.client)
+        sacs = self.calculation_service.calculate_sacs(report.client, report.balances)
         tcc = self.calculation_service.calculate_tcc(report.balances)
         return sacs, tcc
 

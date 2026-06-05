@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.models.account import AccountOwner, AccountType
+from app.models.account import AccountOwner, AccountType, SacsRole
 
 
 class AccountCreate(BaseModel):
@@ -15,6 +15,7 @@ class AccountCreate(BaseModel):
     account_last_four: str | None = Field(default=None, max_length=4, min_length=4)
     interest_rate: Decimal | None = Field(default=None, ge=0, max_digits=5, decimal_places=2)
     property_address: str | None = Field(default=None, max_length=500)
+    sacs_role: SacsRole = SacsRole.NONE
 
 
 class AccountUpdate(AccountCreate):
@@ -33,4 +34,5 @@ class AccountResponse(BaseModel):
     account_last_four: str | None
     interest_rate: Decimal | None
     property_address: str | None
+    sacs_role: SacsRole
     created_at: datetime

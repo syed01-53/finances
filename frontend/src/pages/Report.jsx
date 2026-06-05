@@ -9,6 +9,7 @@ import { getAccounts } from '../features/accounts/accountApi'
 import ReportList from '../features/reports/ReportList'
 import ReportViewer from '../features/reports/ReportViewer'
 import ReportForm from '../features/reports/ReportForm'
+import { getClient } from '../features/clients/clientApi'
 import { deleteReport, getReport, updateReport } from '../features/reports/reportApi'
 
 export default function ReportPage() {
@@ -16,6 +17,7 @@ export default function ReportPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const [report, setReport] = useState(null)
+  const [client, setClient] = useState(null)
   const [accounts, setAccounts] = useState([])
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -36,8 +38,14 @@ export default function ReportPage() {
         const data = await getReport(id)
         if (!cancelled) {
           setReport(data)
-          const clientAccounts = await getAccounts(data.client_id)
-          if (!cancelled) setAccounts(clientAccounts)
+          const [clientData, clientAccounts] = await Promise.all([
+            getClient(data.client_id),
+            getAccounts(data.client_id),
+          ])
+          if (!cancelled) {
+            setClient(clientData)
+            setAccounts(clientAccounts)
+          }
         }
       } catch (err) {
         if (!cancelled) setError(err.message)
@@ -174,6 +182,7 @@ export default function ReportPage() {
         <BalanceForm
           reportId={id}
           accounts={accounts}
+          client={client}
           onSubmit={handleSaveBalances}
           loading={submitting}
         />

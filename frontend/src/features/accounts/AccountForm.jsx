@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Button from '../../components/ui/Button'
 import { ACCOUNT_TYPES, getAccountOwnerOptions } from '../../types'
+import { SACS_ROLES } from '../../utils/calculations'
 
 const emptyForm = {
   name: '',
@@ -10,6 +11,7 @@ const emptyForm = {
   account_last_four: '',
   interest_rate: '',
   property_address: '',
+  sacs_role: 'none',
 }
 
 export default function AccountForm({
@@ -32,6 +34,7 @@ export default function AccountForm({
           account_last_four: initialValues.account_last_four || '',
           interest_rate: initialValues.interest_rate ?? '',
           property_address: initialValues.property_address || '',
+          sacs_role: initialValues.sacs_role || 'none',
         }
       : {}),
   }))
@@ -54,6 +57,7 @@ export default function AccountForm({
       account_last_four: form.account_last_four || null,
       interest_rate: form.interest_rate ? Number(form.interest_rate) : null,
       property_address: form.property_address || null,
+      sacs_role: form.sacs_role || 'none',
     })
     if (!initialValues) {
       setForm(emptyForm)
@@ -116,6 +120,14 @@ export default function AccountForm({
             <input id="property_address" name="property_address" value={form.property_address} onChange={handleChange} className="field-input" />
           </div>
         )}
+        <div>
+          <label htmlFor="sacs_role" className="field-label">SACS Role (optional)</label>
+          <select id="sacs_role" name="sacs_role" value={form.sacs_role} onChange={handleChange} className="field-input">
+            {SACS_ROLES.map((role) => (
+              <option key={role.value} value={role.value}>{role.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="flex gap-3">
         <Button type="submit" disabled={loading}>

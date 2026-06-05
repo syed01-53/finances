@@ -8,6 +8,9 @@ class SACSCalculation(BaseModel):
     outflow: Decimal
     excess: Decimal
     private_reserve_target: Decimal
+    private_reserve_balance: Decimal = Decimal("0")
+    investment_balance: Decimal = Decimal("0")
+    floor_amount: Decimal = Decimal("1000")
 
 
 class TCCCalculation(BaseModel):

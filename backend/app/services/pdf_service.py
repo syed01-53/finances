@@ -1,4 +1,5 @@
 import logging
+import re
 from io import BytesIO
 from pathlib import Path
 from uuid import UUID
@@ -8,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.orm import Session
 
 from app.services.report_service import ReportService
+from app.utils.age import calculate_age
 from app.utils.ssn import mask_ssn
 
 TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"
@@ -29,6 +31,18 @@ def _owner_label_filter(owner: str, client) -> str:
         "joint": "Joint",
     }
     return labels.get(owner, owner)
+
+
+def _ssn_last_four_filter(value) -> str:
+    if not value:
+        return "—"
+    digits = re.sub(r"\D", "", str(value))
+    return digits[-4:] if len(digits) >= 4 else "—"
+
+
+def _age_filter(birth_date) -> str:
+    age = calculate_age(birth_date)
+    return str(age) if age is not None else "—"
 
 
 def _html_to_pdf(html: str) -> bytes:
@@ -55,7 +69,9 @@ class PDFService:
         self.env.filters["currency"] = _currency_filter
         self.env.filters["currency_compact"] = _currency_compact_filter
         self.env.filters["mask_ssn"] = mask_ssn
+        self.env.filters["ssn_last_four"] = _ssn_last_four_filter
         self.env.filters["owner_label"] = _owner_label_filter
+        self.env.filters["client_age"] = _age_filter
 
     def generate_sacs_pdf(self, report_id: UUID) -> bytes:
         report = self.report_service.get_report(report_id)

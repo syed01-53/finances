@@ -39,6 +39,7 @@
  * @property {string} [account_last_four]
  * @property {string} [interest_rate]
  * @property {string} [property_address]
+ * @property {'none'|'private_reserve'|'investment'} sacs_role
  * @property {string} created_at
  */
 
@@ -48,6 +49,9 @@
  * @property {string} outflow
  * @property {string} excess
  * @property {string} private_reserve_target
+ * @property {string} private_reserve_balance
+ * @property {string} investment_balance
+ * @property {string} floor_amount
  */
 
 /**
@@ -80,6 +84,7 @@
  * @property {string} report_id
  * @property {string} account_id
  * @property {string} amount
+ * @property {string} [cash_amount]
  * @property {string} created_at
  * @property {string} updated_at
  * @property {Account} [account]

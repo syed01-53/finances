@@ -27,6 +27,12 @@ class AccountOwner(str, enum.Enum):
     JOINT = "joint"
 
 
+class SacsRole(str, enum.Enum):
+    NONE = "none"
+    PRIVATE_RESERVE = "private_reserve"
+    INVESTMENT = "investment"
+
+
 class Account(Base):
     __tablename__ = "accounts"
 
@@ -58,6 +64,15 @@ class Account(Base):
     account_last_four: Mapped[str | None] = mapped_column(String(4), nullable=True)
     interest_rate: Mapped[Decimal | None] = mapped_column(Numeric(5, 2), nullable=True)
     property_address: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    sacs_role: Mapped[SacsRole] = mapped_column(
+        Enum(
+            SacsRole,
+            name="sacs_role_enum",
+            values_callable=lambda enum_cls: [member.value for member in enum_cls],
+        ),
+        nullable=False,
+        default=SacsRole.NONE,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

@@ -17,6 +17,8 @@ export default function ReportViewer({ report }) {
     return <p className="text-sm text-slate-500">Report not found.</p>
   }
 
+  const canDownload = report.is_complete
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -27,17 +29,31 @@ export default function ReportViewer({ report }) {
           </p>
           {!report.is_complete && (
             <p className="mt-1 text-sm font-medium text-amber-600">
-              Incomplete: {report.missing_accounts} account balance(s) still missing
+              Incomplete: {report.missing_accounts} account balance(s) still missing.
+              PDF download is disabled until all balances are saved.
             </p>
           )}
         </div>
-        <div className="flex gap-2">
-          <a href={getSacsPdfUrl(report.id)} target="_blank" rel="noreferrer">
-            <Button variant="secondary">Download SACS PDF</Button>
-          </a>
-          <a href={getTccPdfUrl(report.id)} target="_blank" rel="noreferrer">
-            <Button variant="secondary">Download TCC PDF</Button>
-          </a>
+        <div className="flex flex-wrap gap-2">
+          {canDownload ? (
+            <>
+              <a href={getSacsPdfUrl(report.id)} target="_blank" rel="noreferrer">
+                <Button variant="secondary">Download SACS PDF</Button>
+              </a>
+              <a href={getTccPdfUrl(report.id)} target="_blank" rel="noreferrer">
+                <Button variant="secondary">Download TCC PDF</Button>
+              </a>
+            </>
+          ) : (
+            <>
+              <Button variant="secondary" disabled title="Complete all balances first">
+                Download SACS PDF
+              </Button>
+              <Button variant="secondary" disabled title="Complete all balances first">
+                Download TCC PDF
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
@@ -49,6 +65,9 @@ export default function ReportViewer({ report }) {
               <MetricRow label="Outflow (Expense Budget)" value={report.sacs.outflow} />
               <MetricRow label="Excess" value={report.sacs.excess} />
               <MetricRow label="Private Reserve Target" value={report.sacs.private_reserve_target} />
+              <MetricRow label="Private Reserve Balance" value={report.sacs.private_reserve_balance} />
+              <MetricRow label="Investment Balance" value={report.sacs.investment_balance} />
+              <MetricRow label="Account Floor" value={report.sacs.floor_amount} />
             </div>
           ) : (
             <p className="text-sm text-slate-500">No SACS data available.</p>
@@ -70,6 +89,10 @@ export default function ReportViewer({ report }) {
           )}
         </Card>
       </div>
+
+      <p className="text-xs text-slate-500">
+        PDF export is the primary output. Canva export can be added in a future release if needed.
+      </p>
     </div>
   )
 }

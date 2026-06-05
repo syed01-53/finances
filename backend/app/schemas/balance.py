@@ -10,6 +10,7 @@ from app.schemas.account import AccountResponse
 class BalanceEntry(BaseModel):
     account_id: UUID
     amount: Decimal = Field(max_digits=14, decimal_places=2)
+    cash_amount: Decimal | None = Field(default=None, max_digits=14, decimal_places=2)
 
 
 class BalanceUpsertRequest(BaseModel):
@@ -23,6 +24,7 @@ class BalanceResponse(BaseModel):
     report_id: UUID
     account_id: UUID
     amount: Decimal
+    cash_amount: Decimal | None = None
     created_at: datetime
     updated_at: datetime
 

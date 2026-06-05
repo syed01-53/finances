@@ -37,9 +37,16 @@ export default function BalanceList({ reportId }) {
               {accountLabel(balance.account?.account_type)}
             </p>
           </div>
-          <span className="text-sm font-medium text-navy-900">
-            {formatCurrency(balance.amount)}
-          </span>
+          <div className="text-right">
+            <span className="text-sm font-medium text-navy-900">
+              {formatCurrency(balance.amount)}
+            </span>
+            {balance.cash_amount != null && (
+              <p className="text-xs text-slate-500">
+                Cash: {formatCurrency(balance.cash_amount)}
+              </p>
+            )}
+          </div>
         </li>
       ))}
     </ul>

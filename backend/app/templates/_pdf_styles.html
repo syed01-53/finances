@@ -1,7 +1,7 @@
 <style>
   @page {
     size: letter;
-    margin: 0.55in 0.6in;
+    margin: 0.5in 0.55in;
   }
 
   * {
@@ -11,119 +11,249 @@
   body {
     font-family: Helvetica, Arial, sans-serif;
     color: #1e293b;
-    font-size: 11pt;
-    line-height: 1.45;
+    font-size: 10pt;
+    line-height: 1.4;
     margin: 0;
   }
 
   .pdf-banner {
-    background-color: #0f172a;
+    background-color: #1e40af;
     color: #ffffff;
-    padding: 18px 22px;
-    margin-bottom: 22px;
+    padding: 16px 20px;
+    margin-bottom: 18px;
   }
 
   .pdf-banner-brand {
-    font-size: 9pt;
+    font-size: 8pt;
     text-transform: uppercase;
-    color: #5eead4;
-    margin: 0 0 6px;
+    color: #93c5fd;
+    margin: 0 0 4px;
   }
 
   .pdf-banner h1 {
-    font-size: 20pt;
-    margin: 0 0 6px;
+    font-size: 18pt;
+    margin: 0 0 4px;
     font-weight: 700;
     color: #ffffff;
   }
 
   .pdf-banner-meta {
-    font-size: 10pt;
-    color: #cbd5e1;
+    font-size: 9pt;
+    color: #dbeafe;
     margin: 0;
   }
 
   .pdf-section-title {
-    background-color: #0f172a;
+    background-color: #1e3a8a;
     color: #ffffff;
-    font-size: 11pt;
+    font-size: 10pt;
     font-weight: 700;
-    padding: 8px 12px;
-    margin: 0 0 12px;
+    padding: 7px 10px;
+    margin: 0 0 10px;
   }
 
   .pdf-muted {
     color: #64748b;
-    font-size: 9pt;
+    font-size: 8pt;
   }
 
-  .pdf-card-row {
+  /* SACS flow diagram */
+  .flow-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 10px 0;
-    margin: 0 0 22px;
+    border-collapse: collapse;
+    margin: 0 0 20px;
   }
 
-  .pdf-card-row td {
-    width: 33%;
-    vertical-align: top;
-    padding: 0;
+  .flow-table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 6px 4px;
     border: none;
   }
 
-  .metric-card {
-    border: 1px solid #cbd5e1;
-    border-top: 4px solid #0d9488;
-    background-color: #f8fafc;
-    padding: 14px 12px;
+  .flow-arrow {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #475569;
+  }
+
+  .flow-arrow-red {
+    color: #dc2626;
+  }
+
+  .bubble {
+    width: 130px;
+    height: 130px;
+    border-radius: 65px;
+    margin: 0 auto;
     text-align: center;
+    color: #ffffff;
+    padding-top: 28px;
   }
 
-  .metric-card.inflow {
-    border-top-color: #059669;
-  }
-
-  .metric-card.outflow {
-    border-top-color: #dc2626;
-  }
-
-  .metric-card.reserve {
-    border-top-color: #0d9488;
-  }
-
-  .metric-label {
-    display: block;
+  .bubble-title {
     font-size: 9pt;
     font-weight: 700;
     text-transform: uppercase;
-    color: #64748b;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
-  .metric-value {
-    display: block;
-    font-size: 16pt;
+  .bubble-amount {
+    font-size: 14pt;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .bubble-sub {
+    font-size: 8pt;
+    margin-top: 2px;
+    opacity: 0.9;
+  }
+
+  .bubble-green {
+    background-color: #059669;
+  }
+
+  .bubble-red {
+    background-color: #dc2626;
+  }
+
+  .bubble-blue {
+    background-color: #2563eb;
+  }
+
+  .bubble-small {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    padding-top: 18px;
+  }
+
+  .bubble-small .bubble-amount {
+    font-size: 10pt;
+  }
+
+  .bubble-account {
+    background-color: #e0f2fe;
+    border: 2px solid #0284c7;
+    color: #0c4a6e;
+    width: 108px;
+    height: 108px;
+    border-radius: 54px;
+    padding: 10px 6px;
+    margin: 4px auto;
+    text-align: center;
+    font-size: 7pt;
+    line-height: 1.25;
+  }
+
+  .bubble-account .acct-name {
+    font-weight: 700;
+    font-size: 7pt;
+    margin-bottom: 2px;
+  }
+
+  .bubble-account .acct-balance {
+    font-size: 9pt;
     font-weight: 700;
     color: #0f172a;
   }
 
-  .metric-note {
-    display: block;
+  .bubble-account .acct-meta {
+    font-size: 6pt;
+    color: #475569;
+  }
+
+  .bubble-liability {
+    background-color: #fff1f2;
+    border-color: #f43f5e;
+    color: #9f1239;
+  }
+
+  .bubble-trust {
+    background-color: #fef3c7;
+    border-color: #d97706;
+    color: #92400e;
+    width: 140px;
+    height: 140px;
+    border-radius: 70px;
+    padding-top: 20px;
+  }
+
+  .info-bubble {
+    background-color: #059669;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  .info-bubble h3 {
+    margin: 0 0 6px;
+    font-size: 11pt;
+    color: #ffffff;
+  }
+
+  .info-bubble p {
+    margin: 2px 0;
     font-size: 8pt;
+    color: #d1fae5;
+  }
+
+  .summary-box {
+    background-color: #e2e8f0;
+    border: 1px solid #94a3b8;
+    padding: 10px 14px;
+    text-align: center;
+    margin: 4px 0;
+  }
+
+  .summary-box .summary-label {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #475569;
+    margin-bottom: 4px;
+  }
+
+  .summary-box .summary-value {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .tcc-grid {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+  }
+
+  .tcc-grid td {
+    vertical-align: top;
+    padding: 6px;
+    border: none;
+    text-align: center;
+  }
+
+  .tcc-zone-label {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
     color: #64748b;
-    margin-top: 4px;
+    margin-bottom: 6px;
+    text-align: center;
   }
 
   .data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
 
   .data-table th,
   .data-table td {
     border: 1px solid #cbd5e1;
-    padding: 9px 12px;
+    padding: 7px 10px;
     text-align: left;
     vertical-align: top;
   }
@@ -131,27 +261,27 @@
   .data-table th {
     background-color: #f1f5f9;
     color: #0f172a;
-    font-size: 10pt;
+    font-size: 9pt;
     font-weight: 700;
   }
 
   .data-table td {
-    font-size: 10pt;
+    font-size: 9pt;
     color: #1e293b;
   }
 
   .data-table tr.total th,
   .data-table tr.total td {
-    background-color: #ecfeff;
+    background-color: #e2e8f0;
     font-weight: 700;
-    color: #0f766e;
+    color: #0f172a;
   }
 
   .data-table tr.highlight th,
   .data-table tr.highlight td {
-    background-color: #ccfbf1;
+    background-color: #dbeafe;
     font-weight: 700;
-    color: #0f172a;
+    color: #1e3a8a;
   }
 
   .data-table tr.liability th,
@@ -160,54 +290,22 @@
     color: #9f1239;
   }
 
-  .info-grid {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 12px 0;
-    margin-bottom: 20px;
-  }
-
-  .info-grid td {
-    width: 50%;
-    vertical-align: top;
-    padding: 0;
-    border: none;
-  }
-
-  .info-card {
-    border: 1px solid #cbd5e1;
-    background-color: #f8fafc;
-    padding: 12px 14px;
-  }
-
-  .info-card h3 {
-    margin: 0 0 8px;
-    font-size: 11pt;
-    color: #0f172a;
-  }
-
-  .info-card p {
-    margin: 3px 0;
-    font-size: 9pt;
-    color: #475569;
-  }
-
   .callout {
-    border: 1px solid #99f6e4;
-    background-color: #f0fdfa;
-    padding: 14px 16px;
-    margin-bottom: 18px;
+    border: 1px solid #93c5fd;
+    background-color: #eff6ff;
+    padding: 12px 14px;
+    margin-bottom: 14px;
   }
 
   .callout-title {
-    font-size: 10pt;
+    font-size: 9pt;
     font-weight: 700;
-    color: #0f766e;
-    margin: 0 0 6px;
+    color: #1d4ed8;
+    margin: 0 0 4px;
   }
 
   .callout-text {
-    font-size: 9pt;
+    font-size: 8pt;
     color: #334155;
     margin: 0;
   }
@@ -217,10 +315,10 @@
   }
 
   .pdf-footer {
-    margin-top: 24px;
-    padding-top: 10px;
+    margin-top: 20px;
+    padding-top: 8px;
     border-top: 1px solid #e2e8f0;
-    font-size: 8pt;
+    font-size: 7pt;
     color: #94a3b8;
     text-align: center;
   }
