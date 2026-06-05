@@ -18,6 +18,11 @@ function formatError(error) {
     return detail
   }
 
+  if (!error.response) {
+    const baseURL = error.config?.baseURL || import.meta.env.VITE_API_URL || 'unknown'
+    return `Cannot reach API at ${baseURL}. If deployed, set VITE_API_URL on Vercel to your Railway URL + /api and redeploy.`
+  }
+
   return error.message || 'Something went wrong'
 }
 

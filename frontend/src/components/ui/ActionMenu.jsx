@@ -34,11 +34,15 @@ export default function ActionMenu({ items = [], disabled = false, className = '
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    const timer = window.setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 0)
+
     document.addEventListener('keydown', handleEscape)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      window.clearTimeout(timer)
+      document.removeEventListener('click', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
     }
   }, [open])
@@ -46,23 +50,24 @@ export default function ActionMenu({ items = [], disabled = false, className = '
   if (!items.length) return null
 
   return (
-    <div className={`relative ${className}`} ref={menuRef}>
+    <div
+      className={`action-menu ${open ? 'action-menu-open' : ''} ${className}`.trim()}
+      ref={menuRef}
+    >
       <button
         type="button"
         aria-label="Open actions menu"
         aria-expanded={open}
+        aria-haspopup="menu"
         disabled={disabled}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-brand-50 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="action-menu-toggle"
       >
         <DotsIcon />
       </button>
 
       {open && (
-        <div
-          role="menu"
-          className="absolute right-0 z-20 mt-1 min-w-[8.5rem] overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-elevated"
-        >
+        <div role="menu" className="action-menu-dropdown">
           {items.map((item) => (
             <button
               key={item.label}
@@ -73,11 +78,7 @@ export default function ActionMenu({ items = [], disabled = false, className = '
                 setOpen(false)
                 item.onClick?.()
               }}
-              className={`block w-full px-3 py-2 text-left text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-                item.danger
-                  ? 'text-rose-600 hover:bg-rose-50'
-                  : 'text-slate-700 hover:bg-brand-50 hover:text-brand-800'
-              }`}
+              className={`action-menu-item ${item.danger ? 'action-menu-item-danger' : ''}`}
             >
               {item.label}
             </button>

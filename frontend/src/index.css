@@ -178,8 +178,101 @@
   }
 
   .panel-list {
-    @apply divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white;
+    @apply divide-y divide-slate-200 overflow-visible rounded-xl border border-slate-200 bg-white;
     box-shadow: theme('boxShadow.card');
+  }
+
+  .panel-list > li {
+    position: relative;
+  }
+
+  .panel-list > li:has(.action-menu-open) {
+    z-index: 20;
+  }
+
+  .action-menu {
+    position: relative;
+  }
+
+  .action-menu-open {
+    z-index: 50;
+  }
+
+  .action-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transition-property: color, background-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .action-menu-toggle:hover:not(:disabled) {
+    background-color: #f0fdfa;
+    color: #0f766e;
+  }
+
+  .action-menu-toggle:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .action-menu-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 50;
+    margin-top: 0.25rem;
+    min-width: 8.5rem;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    box-shadow: 0 10px 25px -12px rgb(15 23 42 / 0.18);
+  }
+
+  .action-menu-item {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #334155;
+    cursor: pointer;
+    transition-property: color, background-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .action-menu-item:hover:not(:disabled) {
+    background-color: #f0fdfa;
+    color: #115e59;
+  }
+
+  .action-menu-item:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .action-menu-item-danger {
+    color: #e11d48;
+  }
+
+  .action-menu-item-danger:hover:not(:disabled) {
+    background-color: #fff1f2;
+    color: #be123c;
   }
 
   .alert-error {
