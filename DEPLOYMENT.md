@@ -143,8 +143,9 @@ npm run dev
 |---------|-------|-----|
 | Deploy fails at `alembic` | Wrong/missing `DATABASE_URL` | Link PostgreSQL; use `${{Postgres.DATABASE_URL}}` |
 | `connection refused` to localhost | Used local `.env` values on Railway | Remove localhost URL; use Postgres reference |
-| Build fails on `pip install` | Bad pinned deps or duplicate build command | Use slim `requirements.txt`; leave **Build command** empty in Railway |
-| Build fails on pycairo/cairo | Missing Linux headers | `nixpacks.toml` installs `libcairo2-dev` etc. |
+| Build fails on `pip install` | Old `requirements.txt` on GitHub or duplicate build command | **Push latest code**; leave **Build command** empty in Railway UI |
+| Build fails on `pycairo` / `cairo not found` | `svglib` 1.6+ pulls native pycairo | Fixed: `svglib==1.5.1` pinned in `requirements.txt` |
+| Deploy still shows 25-line requirements | GitHub not updated | Run `git push origin main` after committing backend changes |
 | CORS error in browser | Wrong `CORS_ORIGINS` | Set exact Vercel URL or `CORS_ALLOW_VERCEL_PREVIEWS=true` |
 | `/health` fails | App crashed on start | Check deploy logs after fixing `DATABASE_URL` |
 

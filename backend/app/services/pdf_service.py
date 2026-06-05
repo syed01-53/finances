@@ -1,5 +1,4 @@
 import logging
-import os
 from io import BytesIO
 from pathlib import Path
 from uuid import UUID
@@ -31,60 +30,18 @@ def _owner_label_filter(owner: str, client) -> str:
     }
     return labels.get(owner, owner)
 
-_DEFAULT_MSYS2_DLL_DIR = Path("C:/msys64/mingw64/bin")
 
-
-def _configure_weasyprint_dll_directories() -> None:
-    if os.environ.get("WEASYPRINT_DLL_DIRECTORIES"):
-        return
-
-    if _DEFAULT_MSYS2_DLL_DIR.is_dir():
-        os.environ["WEASYPRINT_DLL_DIRECTORIES"] = str(_DEFAULT_MSYS2_DLL_DIR)
-
-
-def _html_to_pdf_with_weasyprint(html: str) -> bytes:
-    _configure_weasyprint_dll_directories()
-    from weasyprint import HTML
-
-    return HTML(string=html, base_url=str(TEMPLATES_DIR)).write_pdf()
-
-
-def _html_to_pdf_with_xhtml2pdf(html: str) -> bytes:
+def _html_to_pdf(html: str) -> bytes:
     from xhtml2pdf import pisa
 
     buffer = BytesIO()
     result = pisa.CreatePDF(html, dest=buffer, encoding="utf-8")
     if result.err:
-        raise RuntimeError(f"xhtml2pdf reported {result.err} error(s)")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="PDF generation failed.",
+        )
     return buffer.getvalue()
-
-
-def _html_to_pdf(html: str) -> bytes:
-    try:
-        return _html_to_pdf_with_weasyprint(html)
-    except OSError as exc:
-        logger.warning("WeasyPrint unavailable, falling back to xhtml2pdf: %s", exc)
-        try:
-            return _html_to_pdf_with_xhtml2pdf(html)
-        except Exception as fallback_exc:
-            logger.error("PDF generation failed: %s", fallback_exc)
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=(
-                    "PDF generation is unavailable. Install MSYS2 Pango for WeasyPrint "
-                    "(pacman -S mingw-w64-x86_64-pango) or ensure xhtml2pdf is installed."
-                ),
-            ) from fallback_exc
-    except Exception as exc:
-        logger.error("WeasyPrint PDF generation failed: %s", exc)
-        try:
-            return _html_to_pdf_with_xhtml2pdf(html)
-        except Exception as fallback_exc:
-            logger.error("PDF generation failed: %s", fallback_exc)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="PDF generation failed.",
-            ) from fallback_exc
 
 
 class PDFService:

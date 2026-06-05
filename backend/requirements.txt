@@ -1,4 +1,4 @@
-# Direct dependencies only — let pip resolve sub-dependencies (fixes Railway build)
+# Direct dependencies only — let pip resolve sub-dependencies
 fastapi==0.115.12
 uvicorn[standard]==0.34.0
 pydantic-settings==2.8.1
@@ -8,3 +8,5 @@ SQLAlchemy==2.0.36
 alembic==1.14.1
 psycopg2-binary==2.9.10
 xhtml2pdf==0.2.17
+# Pin svglib<1.6 to avoid rlpycairo/pycairo native build on Railway
+svglib==1.5.1

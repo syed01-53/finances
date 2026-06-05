@@ -1,10 +1,3 @@
-# System libraries for psycopg2 and xhtml2pdf (pycairo/reportlab) on Linux
+# Optional system libs (svglib 1.5.x does not require pycairo)
 [phases.setup]
-aptPkgs = [
-  "pkg-config",
-  "libcairo2-dev",
-  "libpango1.0-dev",
-  "libgdk-pixbuf2.0-dev",
-  "libffi-dev",
-  "shared-mime-info",
-]
+aptPkgs = ["shared-mime-info"]
