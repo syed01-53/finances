@@ -1,0 +1,206 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    margin: 0;
+    min-height: 100vh;
+    @apply bg-slate-50 text-slate-800 antialiased;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .app-sidebar {
+    background-color: #0f172a;
+    border-right: 1px solid #1e293b;
+    color: #e2e8f0;
+  }
+
+  .app-header {
+    background-color: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    color: #f8fafc;
+  }
+
+  .app-nav-link {
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    transition-property: color, background-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .app-nav-link:hover {
+    background-color: #1e293b;
+    color: #ffffff;
+  }
+
+  .app-nav-link-active {
+    background-color: #0d9488;
+    color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    background-color: #0d9488;
+    color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    transition-property: background-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-primary:hover {
+    background-color: #0f766e;
+    color: #ffffff;
+  }
+
+  .btn-primary:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: 1px solid #cbd5e1;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    background-color: #ffffff;
+    color: #334155;
+    transition-property: color, background-color, border-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-secondary:hover {
+    border-color: #5eead4;
+    background-color: #f0fdfa;
+    color: #115e59;
+  }
+
+  .btn-secondary:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    background-color: #e11d48;
+    color: #ffffff;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    transition-property: background-color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .btn-danger:hover {
+    background-color: #be123c;
+    color: #ffffff;
+  }
+
+  .btn-danger:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: #334155;
+  }
+
+  .field-input {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #1e293b;
+    outline: none;
+    transition-property: border-color, box-shadow;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .field-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .field-input:focus {
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 2px #99f6e4;
+  }
+
+  .field-input:disabled {
+    cursor: not-allowed;
+    background-color: #f1f5f9;
+    color: #64748b;
+  }
+
+  select.field-input {
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #1e293b;
+  }
+
+  .panel-list {
+    @apply divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white;
+    box-shadow: theme('boxShadow.card');
+  }
+
+  .alert-error {
+    @apply rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700;
+  }
+
+  .link-brand {
+    @apply font-medium transition-colors;
+    color: theme('colors.brand.700');
+  }
+
+  .link-brand:hover {
+    color: theme('colors.brand.800');
+  }
+
+  .page-title {
+    @apply text-2xl font-semibold tracking-tight;
+    color: theme('colors.navy.900');
+  }
+
+  .page-subtitle {
+    @apply text-sm text-slate-500;
+  }
+}

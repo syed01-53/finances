@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TCC - {{ client.name }}</title>
+  {% include '_pdf_styles.html' %}
+</head>
+<body>
+  {% set retirement_types = ['ira', 'roth_ira', '401k', 'pension'] %}
+  {% set liability_types = ['mortgage', 'auto_loan'] %}
+
+  <div class="pdf-banner">
+    <p class="pdf-banner-brand">AW Client Report Portal</p>
+    <h1>Total Client Chart (TCC)</h1>
+    <p class="pdf-banner-meta">
+      {{ client.name }} &mdash; {{ report.title }}
+      {% if report.created_at %} &mdash; {{ report.created_at.strftime('%B %d, %Y') }}{% endif %}
+    </p>
+  </div>
+
+  <table class="info-grid">
+    <tr>
+      <td>
+        <div class="info-card">
+          <h3>{{ client.name }}</h3>
+          {% if client.date_of_birth %}<p>DOB: {{ client.date_of_birth }}</p>{% endif %}
+          {% if client.ssn %}<p>SSN: {{ client.ssn | mask_ssn }}</p>{% endif %}
+          {% if client.phone %}<p>Phone: {{ client.phone }}</p>{% endif %}
+        </div>
+      </td>
+      <td>
+        <div class="info-card">
+          {% if client.is_married %}
+          <h3>{{ client.spouse_name or 'Spouse' }}</h3>
+          {% if client.spouse_date_of_birth %}<p>DOB: {{ client.spouse_date_of_birth }}</p>{% endif %}
+          {% if client.spouse_ssn %}<p>SSN: {{ client.spouse_ssn | mask_ssn }}</p>{% endif %}
+          {% else %}
+          <h3>Marital Status</h3>
+          <p>Single</p>
+          {% endif %}
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="pdf-section-title">Retirement Accounts</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Institution</th>
+        <th>Owner</th>
+        <th class="amount-right">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set retirement_rows = balances | selectattr('account.account_type.value', 'in', retirement_types) | list %}
+      {% if retirement_rows %}
+        {% for balance in retirement_rows %}
+        <tr>
+          <td>{{ balance.account.name }}</td>
+          <td>{{ balance.account.institution or '—' }}</td>
+          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
+          <td class="amount-right">{{ balance.amount | currency }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr class="empty-row"><td colspan="4">No retirement accounts recorded.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="pdf-section-title">Trust / Property</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Property Address</th>
+        <th>Owner</th>
+        <th class="amount-right">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set trust_rows = balances | selectattr('account.account_type.value', 'equalto', 'trust') | list %}
+      {% if trust_rows %}
+        {% for balance in trust_rows %}
+        <tr>
+          <td>{{ balance.account.name }}</td>
+          <td>{{ balance.account.property_address or '—' }}</td>
+          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
+          <td class="amount-right">{{ balance.amount | currency }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr class="empty-row"><td colspan="4">No trust or property accounts recorded.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="pdf-section-title">Non-Retirement Accounts</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Institution</th>
+        <th>Owner</th>
+        <th class="amount-right">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set brokerage_rows = balances | selectattr('account.account_type.value', 'equalto', 'brokerage') | list %}
+      {% if brokerage_rows %}
+        {% for balance in brokerage_rows %}
+        <tr>
+          <td>{{ balance.account.name }}</td>
+          <td>{{ balance.account.institution or '—' }}</td>
+          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
+          <td class="amount-right">{{ balance.amount | currency }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr class="empty-row"><td colspan="4">No brokerage accounts recorded.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="pdf-section-title">Liabilities (Separate)</div>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Account</th>
+        <th>Rate</th>
+        <th>Owner</th>
+        <th class="amount-right">Balance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set liability_rows = balances | selectattr('account.account_type.value', 'in', liability_types) | list %}
+      {% if liability_rows %}
+        {% for balance in liability_rows %}
+        <tr class="liability">
+          <td>{{ balance.account.name }}</td>
+          <td>{% if balance.account.interest_rate %}{{ balance.account.interest_rate }}%{% else %}—{% endif %}</td>
+          <td>{{ balance.account.owner.value | owner_label(client) }}</td>
+          <td class="amount-right">{{ balance.amount | currency }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr class="empty-row"><td colspan="4">No liabilities recorded.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+
+  <div class="pdf-section-title">Net Worth Summary</div>
+  <table class="data-table">
+    <tbody>
+      <tr>
+        <th>Client 1 Retirement</th>
+        <td class="amount-right">{{ tcc.client_1_retirement | currency }}</td>
+      </tr>
+      <tr>
+        <th>Client 2 Retirement</th>
+        <td class="amount-right">{{ tcc.client_2_retirement | currency }}</td>
+      </tr>
+      <tr>
+        <th>Non-Retirement Total</th>
+        <td class="amount-right">{{ tcc.non_retirement | currency }}</td>
+      </tr>
+      <tr>
+        <th>Trust</th>
+        <td class="amount-right">{{ tcc.trust | currency }}</td>
+      </tr>
+      <tr class="highlight">
+        <th>Grand Total Net Worth</th>
+        <td class="amount-right">{{ tcc.grand_total | currency }}</td>
+      </tr>
+      <tr class="liability">
+        <th>Liabilities (not subtracted)</th>
+        <td class="amount-right">{{ tcc.liabilities | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pdf-footer">
+    Confidential client report generated by AW Client Report Portal.
+  </div>
+</body>
+</html>

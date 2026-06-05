@@ -1,0 +1,238 @@
+<style>
+  @page {
+    size: letter;
+    margin: 0.55in 0.6in;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    font-size: 11pt;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .pdf-banner {
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+  }
+
+  .pdf-banner-brand {
+    font-size: 9pt;
+    text-transform: uppercase;
+    color: #5eead4;
+    margin: 0 0 6px;
+  }
+
+  .pdf-banner h1 {
+    font-size: 20pt;
+    margin: 0 0 6px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .pdf-banner-meta {
+    font-size: 10pt;
+    color: #cbd5e1;
+    margin: 0;
+  }
+
+  .pdf-section-title {
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 11pt;
+    font-weight: 700;
+    padding: 8px 12px;
+    margin: 0 0 12px;
+  }
+
+  .pdf-muted {
+    color: #64748b;
+    font-size: 9pt;
+  }
+
+  .pdf-card-row {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 10px 0;
+    margin: 0 0 22px;
+  }
+
+  .pdf-card-row td {
+    width: 33%;
+    vertical-align: top;
+    padding: 0;
+    border: none;
+  }
+
+  .metric-card {
+    border: 1px solid #cbd5e1;
+    border-top: 4px solid #0d9488;
+    background-color: #f8fafc;
+    padding: 14px 12px;
+    text-align: center;
+  }
+
+  .metric-card.inflow {
+    border-top-color: #059669;
+  }
+
+  .metric-card.outflow {
+    border-top-color: #dc2626;
+  }
+
+  .metric-card.reserve {
+    border-top-color: #0d9488;
+  }
+
+  .metric-label {
+    display: block;
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+
+  .metric-value {
+    display: block;
+    font-size: 16pt;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .metric-note {
+    display: block;
+    font-size: 8pt;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+  }
+
+  .data-table th,
+  .data-table td {
+    border: 1px solid #cbd5e1;
+    padding: 9px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .data-table th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-size: 10pt;
+    font-weight: 700;
+  }
+
+  .data-table td {
+    font-size: 10pt;
+    color: #1e293b;
+  }
+
+  .data-table tr.total th,
+  .data-table tr.total td {
+    background-color: #ecfeff;
+    font-weight: 700;
+    color: #0f766e;
+  }
+
+  .data-table tr.highlight th,
+  .data-table tr.highlight td {
+    background-color: #ccfbf1;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .data-table tr.liability th,
+  .data-table tr.liability td {
+    background-color: #fff1f2;
+    color: #9f1239;
+  }
+
+  .info-grid {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 12px 0;
+    margin-bottom: 20px;
+  }
+
+  .info-grid td {
+    width: 50%;
+    vertical-align: top;
+    padding: 0;
+    border: none;
+  }
+
+  .info-card {
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    padding: 12px 14px;
+  }
+
+  .info-card h3 {
+    margin: 0 0 8px;
+    font-size: 11pt;
+    color: #0f172a;
+  }
+
+  .info-card p {
+    margin: 3px 0;
+    font-size: 9pt;
+    color: #475569;
+  }
+
+  .callout {
+    border: 1px solid #99f6e4;
+    background-color: #f0fdfa;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+
+  .callout-title {
+    font-size: 10pt;
+    font-weight: 700;
+    color: #0f766e;
+    margin: 0 0 6px;
+  }
+
+  .callout-text {
+    font-size: 9pt;
+    color: #334155;
+    margin: 0;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .pdf-footer {
+    margin-top: 24px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 8pt;
+    color: #94a3b8;
+    text-align: center;
+  }
+
+  .amount-right {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .empty-row td {
+    color: #94a3b8;
+    font-style: italic;
+  }
+</style>
